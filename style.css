@@ -1,0 +1,26 @@
+* {
+  box-sizing: border-box;
+  touch-action: manipulation;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: black;
+}
+
+#score {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  color: white;
+  font-size: 18px;
+  z-index: 10;
+}
+
+canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
