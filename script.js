@@ -31,8 +31,8 @@ const player = {
   width: 120,
   height: 120,
   velocityY: 0,
-  gravity: 1.2,      // gravity controls fall speed
-  jumpStrength: 20,  // initial jump velocity
+  gravity: 0.9,       // lower gravity = longer jump
+  jumpStrength: 30,   // higher jump
   isJumping: false,
   groundY: 0,
   img: playerImg
@@ -84,7 +84,7 @@ function createObstacle() {
   });
 }
 
-// --- UPDATE GAME ---
+// --- GAME LOOP ---
 function update() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -95,7 +95,6 @@ function update() {
   player.velocityY += player.gravity;
   player.y += player.velocityY;
 
-  // Smooth landing
   if (player.y >= player.groundY) {
     player.y = player.groundY;
     player.velocityY = 0;
