@@ -1,6 +1,11 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+// --- DOM elements ---
+const gameOverPopup = document.getElementById("gameOverPopup");
+const finalScoreEl = document.getElementById("finalScore");
+const restartBtn = document.getElementById("restartBtn");
+
 // --- CANVAS RESIZE ---
 function resizeCanvas() {
   canvas.width = window.innerWidth;
@@ -31,8 +36,8 @@ const player = {
   width: 120,
   height: 120,
   velocityY: 0,
-  gravity: 0.9,       // lower gravity = longer jump
-  jumpStrength: 30,   // higher jump
+  gravity: 0.9,      // for longer jump
+  jumpStrength: 30,  // high jump
   isJumping: false,
   groundY: 0,
   img: playerImg
@@ -60,7 +65,6 @@ function jump() {
     player.velocityY = -player.jumpStrength;
     player.isJumping = true;
 
-    // Play jump sound
     jumpSounds[jumpSoundIndex].currentTime = 0;
     jumpSounds[jumpSoundIndex].play();
     jumpSoundIndex = (jumpSoundIndex + 1) % jumpSounds.length;
@@ -83,6 +87,22 @@ function createObstacle() {
     speed: 5
   });
 }
+
+// --- SHOW GAME OVER POPUP ---
+function showGameOver() {
+  finalScoreEl.innerText = "Score: " + score;
+  gameOverPopup.style.display = "flex";
+}
+
+// --- RESTART GAME ---
+restartBtn.addEventListener("click", () => {
+  obstacles = [];
+  score = 0;
+  player.y = player.groundY;
+  player.velocityY = 0;
+  player.isJumping = false;
+  gameOverPopup.style.display = "none";
+});
 
 // --- GAME LOOP ---
 function update() {
@@ -107,7 +127,6 @@ function update() {
   // --- OBSTACLES ---
   obstacles.forEach((obs, i) => {
     obs.x -= obs.speed;
-
     ctx.drawImage(obstacleImg, obs.x, obs.y, obs.width, obs.height);
 
     // Collision detection
@@ -117,9 +136,7 @@ function update() {
       player.y < obs.y + obs.height &&
       player.y + player.height > obs.y
     ) {
-      alert("Game Over! Score: " + score);
-      obstacles = [];
-      score = 0;
+      showGameOver(); // <-- custom notification
     }
 
     if (obs.x + obs.width < 0) obstacles.splice(i, 1);
